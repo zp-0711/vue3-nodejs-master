@@ -2,13 +2,33 @@
   <div id="register">
     <label class="lab">
       <span class="demo-input-label">Input Your Email:</span>
-      <el-input v-model="email" placeholder="Please input" clearable @blur="checkEmail"/>
-      <div v-show ="isEmail" class="check"><span>邮箱格式不符合规则</span></div>
+      <el-input
+        v-model="email"
+        placeholder="Please input"
+        clearable
+        @blur="checkEmail"
+      />
+      <div v-show="isEmail" class="check"><span>邮箱格式不符合规则</span></div>
     </label>
     <label class="lab">
       <span class="demo-input-label">Input Your Password:</span>
-      <el-input v-model="psw" placeholder="Please input password" show-password @blur="checkPsw" @keyup.enter="register"/>
-      <div v-show ="isPsw" class="check"><span>密码不符合规则</span></div>
+      <el-input
+        v-model="psw"
+        placeholder="Please input password"
+        show-password
+        @blur="checkPsw"
+        @keyup.enter="register"
+      />
+      <div v-show="isPsw" class="check"><span>密码不符合规则</span></div>
+    </label><br>
+        <label class="lab">
+      <span class="demo-input-label">Input Your name:</span>
+      <el-input
+        v-model="Name"
+        placeholder="Please input"
+        clearable
+      />
+      <!-- <div v-show="isEmail" class="check"><span>邮箱格式不符合规则</span></div> -->
     </label>
     <br />
     <div id="btn">
@@ -27,9 +47,10 @@ export default {
   setup() {
     const email = ref(""); // 绑定 email
     const psw = ref(""); // 绑定 密码
+    const Name = ref("")
     let isEmail = ref(false);
     let isPsw = ref(false);
-
+    console.log(email);
     const router = useRouter();
 
     // 检查 email 格式
@@ -38,14 +59,14 @@ export default {
       if (!emailReg.test(email.value) && email.value.length) {
         isEmail.value = true;
       } else isEmail.value = false;
-    }
+    };
 
     // 检查 password 格式
     const checkPsw = () => {
       if (psw.value.length > 0 && psw.value.length < 6) {
         isPsw.value = true;
       } else isPsw.value = false;
-    }
+    };
 
     const register = () => {
       if (!email.value || !psw.value) {
@@ -60,7 +81,7 @@ export default {
       axios({
         method: "post",
         url: "http://127.0.0.1:3000/api/user/add",
-        data: { email: email.value, password: psw.value },
+        data: { email: email.value, password: psw.value ,name:Name.value,qq:'1235456'},
       }).then((res) => {
         if (res.data.status === "3") {
           router.push("/home/login");
@@ -81,11 +102,13 @@ export default {
     return {
       email,
       psw,
+        Name,
       register,
       checkEmail,
       isEmail,
       checkPsw,
-      isPsw
+      isPsw,
+    
     };
   },
 };

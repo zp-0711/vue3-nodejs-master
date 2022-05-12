@@ -5,8 +5,8 @@ const token = require('./token.js');
 
 const connection = mysql.createConnection({
     host: '127.0.0.1',
-    user: 'dev',
-    password: '@HautZhj6248',
+    user: 'root',
+    password: '123456',
     database: 'login'
 })
 connection.connect();
@@ -14,12 +14,12 @@ connection.connect();
 // 登录模块
 router.post('/login', (req, res) => {
     const user = req.body;
-    // console.log(req.body);
+    console.log(req.body);
     // 定义查询 sql
-    const sel_email_sql =  `select * from user where email = '${user.email}'`;
+    const sel_email_sql = `select * from user where email = '${user.email}'`;
     connection.query(sel_email_sql, (err, results) => {
         if (err) throw err;
-        // console.log(results);
+        console.log(results);
         if (results[0] === undefined) {
             res.json({
                 status: '-1',
@@ -46,13 +46,12 @@ router.post('/login', (req, res) => {
 // 注册模块
 router.post('/add', (req, res) => {
     const register = req.body;
-    // console.log(register);
+    console.log(register);
     // 查询 sql 防止一个邮箱重复注册
     const sel_sql = `select * from user where email = '${register.email}'`;
 
     // 添加 sql
-    const add_sql = 'insert into user(email, password) values (?, ?)';
-
+    const add_sql = 'insert into user(email, password,userName,userQQ) values (?, ?,?,?)';
     connection.query(sel_sql, (err, results) => {
         if (err) throw err;
         if (results.length !== 0 && register.email === results[0].email) {
@@ -61,7 +60,7 @@ router.post('/add', (req, res) => {
                 message: '邮箱已被注册，注册失败！'
             })
         } else {
-            connection.query(add_sql, [register.email, register.password], (err, results) => {
+            connection.query(add_sql, [register.email, register.password, register.name, register.qq], (err, results) => {
                 if (err) throw err;
                 else {
                     res.send({
